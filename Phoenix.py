@@ -23,7 +23,7 @@ url = input("Enter the target URL: ") # Change this to the target URL
 # Parse the url and get the host and port
 parsed_url = urllib.parse.urlparse(url)
 host = parsed_url.hostname
-port = parsed_url.port
+port = parsed_url.port or 80 # Default to 80 if no port is specified
 
 # Define the number of threads to use
 Threads = int(input("Enter the number of threads: ")) # Change this to the number of threads
