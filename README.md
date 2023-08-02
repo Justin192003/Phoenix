@@ -1,2 +1,2 @@
 # Phoenix
-python 3
+python3 phoenix.py
